@@ -11,9 +11,8 @@ RUN set -x && \
     rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 RUN useradd -m -s /bin/bash rails && \
-    mkdir -p /usr/src/app && \
-    mkdir -p /usr/src/gem && \
-    chown rails:rails /usr/src/app $BUNDLE_APP_CONFIG
+    mkdir -p /usr/src && \
+    chown rails:rails /usr/src $BUNDLE_APP_CONFIG
 
 RUN echo 'ja_JP.UTF-8 UTF-8' >> /etc/locale.gen && \
     locale-gen && \
@@ -27,6 +26,6 @@ ENV LC_CTYPE ja_JP.UTF-8
 ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP.UTF-8
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 CMD ["/bin/bash"]
