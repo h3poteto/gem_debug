@@ -5,6 +5,11 @@ services:
     volumes:
       - /var/lib/mysql
 
+  fake_sqs:
+    build: dockerfiles/fake_sqs
+    hostname: fakesqs.localdomain
+    command: /usr/local/bundle/bin/fake_sqs --bind fakesqs.localdomain
+
   mysql:
     image: mysql:5.6.29
     volumes_from:
@@ -15,11 +20,25 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
 
   rails:
-    build: .
+    build: dockerfiles/rails
+    env_file: .docker-env
     volumes:
-      - ..:/usr/src
+      - .:/usr/src/app
+      - ../shoryuken:/usr/src/gem
     links:
+      - fake_sqs:fakesqs.localdomain
       - mysql:mysql
     ports:
       - "3000:3000"
+    command: /bin/bash
+
+  shoryuken:
+    build: dockerfiles/rails
+    env_file: .docker-env
+    volumes:
+      - .:/usr/src/app
+      - ../shoryuken:/usr/src/gem
+    links:
+      - fake_sqs:fakesqs.localdomain
+      - mysql:mysql
     command: /bin/bash
