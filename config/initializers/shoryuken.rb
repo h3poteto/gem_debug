@@ -18,4 +18,24 @@ unless queues.queue_urls.map{|q| URI.parse(q).path }.any?{|p| /.*default/ =~ p }
     Rails.logger.error "#{sqs_client.config.endpoint}/defaultの作成に失敗しました"
   end
 end
-Shoryuken::EnvironmentLoader.load(config_file: "config/shoryuken.yml", logfile: "log/shoryuken.log")
+
+Shoryuken.configure_server do |config|
+  config.sqs = {
+    endpoint: ENV["SQS_ENDPOINT"],
+    secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
+    access_key_id: ENV["AWS_ACCESS_KEY_ID"],
+    region: ENV["AWS_REGION"],
+    raise_response_errors: false
+  }
+end
+
+Shoryuken.configure_client do |config|
+  config.sqs = {
+    endpoint: ENV["SQS_ENDPOINT"],
+    secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
+    access_key_id: ENV["AWS_ACCESS_KEY_ID"],
+    region: ENV["AWS_REGION"],
+    raise_response_errors: false
+  }
+end
+
