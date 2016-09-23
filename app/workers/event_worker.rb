@@ -1,7 +1,7 @@
 class EventWorker
   include Shoryuken::Worker
 
-  shoryuken_options queue: "default", auto_delete: true, body_parser: :json
+  shoryuken_options queue: "event", auto_delete: true
 
   def perform(sqs_msg, message)
     puts "shryuken event"
