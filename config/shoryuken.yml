@@ -1,12 +1,3 @@
-aws:
-  access_key_id:     <%= ENV["AWS_ACCESS_KEY_ID"] %>
-  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
-  region:            <%= ENV["AWS_REGION"] %>
-  sqs_endpoint:      <%= ENV["SQS_ENDPOINT"] %>
-  receive_message:
-    attribute_names:
-      - ApproximateReceiveCount
-      - SentTimestamp
 verbose: false
 concurrency: 10
 delay: 25

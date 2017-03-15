@@ -18,22 +18,17 @@ unless queues.queue_urls.map{|q| URI.parse(q).path }.any?{|p| /.*event/ =~ p }
     Rails.logger.error "#{sqs_client.config.endpoint}/eventの作成に失敗しました"
   end
 end
-# Shoryuken::EnvironmentLoader.load(config_file: "config/shoryuken.yml", logfile: "log/shoryuken.log")
 
-Shoryuken.configure_server do |config|
-  config.aws = {
-    sqs_endpoint: ENV["SQS_ENDPOINT"],
-    secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-    access_key_id: ENV["AWS_ACCESS_KEY_ID"],
-    region: ENV["AWS_REGION"]
-  }
-end
-
-Shoryuken.configure_client do |config|
-  config.aws = {
-    sqs_endpoint: ENV["SQS_ENDPOINT"],
-    secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-    access_key_id: ENV["AWS_ACCESS_KEY_ID"],
-    region: ENV["AWS_REGION"]
-  }
-end
+Shoryuken.sqs_client = Aws::SQS::Client.new(
+  endpoint: ENV["SQS_ENDPOINT"],
+  secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
+  access_key_id: ENV["AWS_ACCESS_KEY_ID"],
+  region: ENV["AWS_REGION"],
+  verify_checksums: false
+)
+Shoryuken.sqs_client_receive_message_opts = {
+  attribute_names: %(
+      ApproximateReceiveCount
+      SentTimestamp
+  )
+}
