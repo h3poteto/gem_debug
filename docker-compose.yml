@@ -5,10 +5,14 @@ services:
     volumes:
       - /var/lib/mysql
 
-  fake_sqs:
-    build: dockerfiles/fake_sqs
-    hostname: fakesqs.localdomain
-    command: /usr/local/bundle/bin/fake_sqs --bind fakesqs.localdomain
+  localsqs:
+    image: localstack/localstack
+    hostname: localsqs
+    environment:
+      SERVICES: "sqs"
+      DEFAULT_REGION: "ap-northeast-1"
+      DEBUG: "true"
+      HOSTNAME: localsqs
 
   mysql:
     image: mysql:5.7
@@ -26,7 +30,7 @@ services:
       - .:/usr/src/app
       - ../shoryuken:/usr/src/gem
     links:
-      - fake_sqs:fakesqs.localdomain
+      - localsqs:localsqs
       - mysql:mysql
     ports:
       - "3000:3000"
@@ -39,6 +43,6 @@ services:
       - .:/usr/src/app
       - ../shoryuken:/usr/src/gem
     links:
-      - fake_sqs:fakesqs.localdomain
+      - localsqs:localsqs
       - mysql:mysql
-    command: /bin/bash
+    command: bundle exec shoryuken -R -C config/shoryuken.yml
