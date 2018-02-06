@@ -24,7 +24,10 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
 
   rails:
-    build: dockerfiles/rails
+    image: h3poteto/rails:2.4.2
+    environment:
+      AWS_REGION: ap-northeast-1
+      SQS_ENDPOINT: http://localsqs:4576
     env_file: .docker-env
     volumes:
       - .:/usr/src/app
@@ -37,8 +40,10 @@ services:
     command: /bin/bash
 
   shoryuken:
-    build: dockerfiles/rails
-    env_file: .docker-env
+    image: h3poteto/rails:2.4.2
+    environment:
+      AWS_REGION: ap-northeast-1
+      SQS_ENDPOINT: http://localsqs:4576
     volumes:
       - .:/usr/src/app
       - ../shoryuken:/usr/src/gem
