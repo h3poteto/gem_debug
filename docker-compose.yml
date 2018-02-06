@@ -31,7 +31,8 @@ services:
     env_file: .docker-env
     volumes:
       - .:/usr/src/app
-      - ../shoryuken:/usr/src/gem
+      - ../shoryuken:/usr/src/shoryuken
+      - ../logist:/usr/src/logist
     links:
       - localsqs:localsqs
       - mysql:mysql
@@ -46,7 +47,8 @@ services:
       SQS_ENDPOINT: http://localsqs:4576
     volumes:
       - .:/usr/src/app
-      - ../shoryuken:/usr/src/gem
+      - ../shoryuken:/usr/src/shoryuken
+      - ../logist:/usr/src/logist
     links:
       - localsqs:localsqs
       - mysql:mysql
